@@ -1,19 +1,17 @@
-// import React, { ThemeProvider } from "react";
-import { Fragment } from "react";
+import { ThemeProvider } from "styled-components";
+
 import "./App.css";
 import MainContainer from "./components/MainContainer";
 import { GlobalStyles } from "./components/GlobalStyles";
 
-// import { DefaultColors } from "./assets/themes/Themes";
+import { DefaultColors } from "./assets/themes/themes";
 
 function App() {
   return (
-    // <ThemeProvider theme={DefaultColors}>
-    <Fragment>
+    <ThemeProvider theme={DefaultColors}>
       <GlobalStyles />
       <MainContainer />
-    </Fragment>
-    // </ThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import darkmode from "../assets/Images/Path.svg";
@@ -7,13 +7,17 @@ import homeTown from "../assets/Images/Shape.svg";
 import link from "../assets/Images/002-url.svg";
 import twitter from "../assets/Images/Path1.svg";
 import officeBuilding from "../assets/Images/001-office-building.svg";
-const MainContainer = () => {
+const MainContainer = (props) => {
+  const [defoultData, setDefoultData] = useState("");
+  const [username, setUsername] = useState("");
+  const [data, setData] = useState('');
   const profileDefoult = axios
     .get("https://api.github.com/users/octocat")
     .then((resp) => setDefoultData(resp.data));
-  const [username, setUsername] = useState("");
-  const [data, setData] = useState({ profileDefoult });
-  const [defoultData, setDefoultData] = useState("");
+
+useEffect()=>{
+
+,}
   const onChangeHandler = (e) => {
     setUsername(e.target.value);
   };
@@ -44,14 +48,14 @@ const MainContainer = () => {
   let Name = defoultData.name;
   if (data.name) {
     Name = data.name;
-  } else if (data.name == null) {
+  } else if (data.name === null) {
     Name = "Not Available";
   }
   let joined = defoultData.created_at;
   if (data.created_at) {
     joined = data.created_at;
   }
-  let Bio = defoultData.bio;
+  let Bio = defoultData.bio || "Not Available";
   if (data.bio) {
     Bio = data.bio;
   } else if (data.bio === null) {
@@ -62,8 +66,8 @@ const MainContainer = () => {
 
   if (data.public_repos) {
     Repository = data.public_repos;
-  } else if (data.public_repos == null) {
-    Repository = "Not Available";
+  } else if (data.public_repos === 0) {
+    Repository = 0;
   }
   let Followers = defoultData.followers;
   if (data.followers) {
@@ -80,14 +84,14 @@ const MainContainer = () => {
   let Location = "San Francisco";
   if (data.location) {
     Location = data.location;
-  } else if (data.location == null) {
+  } else if (data.location === null) {
     Location = "Not Available";
   }
   let Blog = defoultData.blog;
   if (data.blog) {
     Blog = data.blog;
   }
-  let Twitter = defoultData.twitter_username;
+  let Twitter = defoultData.twitter_username || "Not Available";
   if (data.twitter_username) {
     Twitter = data.twitter_username;
   } else if (data.twitter_username === null) {
@@ -145,19 +149,19 @@ const MainContainer = () => {
         <UserInfo>
           <div>
             <img src={homeTown} alt="home town" />
-            {Location}
+            <p> {Location}</p>
           </div>
           <div>
             <img src={link} alt="link" />
-            {Blog}
+            <p>{Blog}</p>
           </div>
           <div>
             <img src={twitter} alt="home town" />
-            {Twitter}
+            <p> {Twitter}</p>
           </div>
           <div>
             <img src={officeBuilding} alt="company" />
-            {Company}
+            <p>{Company}</p>
           </div>
         </UserInfo>
       </UserCardStyled>
@@ -167,7 +171,7 @@ const MainContainer = () => {
 const ContainerStyled = styled.div`
   min-width: 375px;
   padding: 31px 24px 79px 24px;
-  background-color: #f2f2f2;
+  background-color: ${({ theme }) => theme.whiteSmoke};
 `;
 
 const HeaderStyled = styled.div`
@@ -175,9 +179,10 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   h1 {
-    /* color: ${({ theme }) => theme.black}; */
+    color: ${({ theme }) => theme.midnightExpress};
     font-size: 26px;
     font-weight: 700;
+    font-family: "Space Mono", monospace;
   }
   button {
     align-items: center;
@@ -185,6 +190,13 @@ const HeaderStyled = styled.div`
     border: none;
     background-color: transparent;
     gap: 16px;
+    font-family: "Space Mono", monospace;
+    span {
+      color: ${({ theme }) => theme.steel};
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+    }
   }
 `;
 
@@ -194,8 +206,9 @@ const InputStyled = styled.div`
   height: 60px;
   border-radius: 15px;
   margin: 35px 0 16px 0;
-  background-color: #fefefe;
+  background-color: ${({ theme }) => theme.white};
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
+
   img {
     width: 20.05px;
     height: 20px;
@@ -208,16 +221,18 @@ const InputStyled = styled.div`
     margin-bottom: 17px;
     border: none;
     outline: none;
+    font-family: "Space Mono";
   }
   input::placeholder {
-    color: #4b6a9b;
+    color: ${({ theme }) => theme.steel};
     font-size: 13px;
     font-weight: 400;
     line-height: 25px;
+    font-family: "Space Mono";
   }
   button {
-    background-color: #0079ff;
-    color: #ffffff;
+    background-color: ${({ theme }) => theme.dodgerBlue};
+    color: ${({ theme }) => theme.white1};
     font-size: 14px;
     font-weight: 700;
     line-height: 20.73px;
@@ -228,19 +243,22 @@ const InputStyled = styled.div`
     border-radius: 10px;
     border: none;
     cursor: pointer;
+    font-family: "Space Mono";
   }
 `;
 
 const UserCardStyled = styled.div`
   padding: 33px 24px 49px 24px;
-  background-color: #fefefe;
+  background-color: ${({ theme }) => theme.white};
   border-radius: 15px;
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
+  font-family: "Space Mono";
   p {
     font-size: 13px;
     font-weight: 400;
-    color: #4b6a9b;
+    color: ${({ theme }) => theme.steel};
     margin-bottom: 23px;
+    font-family: "Space Mono";
   }
 `;
 const UserHolder = styled.div`
@@ -254,37 +272,42 @@ const UserHolder = styled.div`
   h3 {
     font-size: 16px;
     font-weight: 700;
-    color: #2b3442;
+    color: ${({ theme }) => theme.licorice};
+    font-family: "Space Mono";
   }
   p {
     font-size: 13px;
     font-weight: 400;
-    color: #0079ff;
+    color: ${({ theme }) => theme.dodgerBlue};
     margin-bottom: 6px;
+    font-family: "Space Mono";
   }
   span {
     font-size: 13px;
     font-weight: 400;
-    color: #697c9a;
+    color: ${({ theme }) => theme.stone};
+    font-family: "Space Mono";
   }
 `;
 const UserBox = styled.div`
   display: flex;
   justify-content: space-around;
-  background-color: #f6f8ff;
+  background-color: ${({ theme }) => theme.white2};
   border-radius: 10px;
   padding: 18px 14px 19px 15px;
   div {
     font-size: 11px;
     font-weight: 400;
-    color: #4b6a9b;
+    color: ${({ theme }) => theme.steel};
+    font-family: "Space Mono";
   }
   h3 {
     font-size: 16px;
     font-weight: 700;
     margin-top: 8px;
     text-align: center;
-    color: #2b3442;
+    color: ${({ theme }) => theme.licorice};
+    font-family: "Space Mono";
   }
 `;
 const UserInfo = styled.div`
@@ -296,6 +319,9 @@ const UserInfo = styled.div`
   div {
     display: flex;
     gap: 15px;
+    p {
+      font-family: "Space Mono";
+    }
   }
 `;
 export default MainContainer;
