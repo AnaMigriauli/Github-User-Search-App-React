@@ -1,23 +1,41 @@
-import React, { useState,useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import darkmode from "../assets/Images/Path.svg";
+import moon from "../assets/Images/Path.svg";
+import sun from "../assets/Images/002-sun.svg";
 import searchIcon from "../assets/Images/Combined Shape.svg";
 import homeTown from "../assets/Images/Shape.svg";
 import link from "../assets/Images/002-url.svg";
 import twitter from "../assets/Images/Path1.svg";
 import officeBuilding from "../assets/Images/001-office-building.svg";
+
+const baseUrl = axios.create({
+  baseURL: "https://api.github.com/users/",
+});
+
 const MainContainer = (props) => {
-  const [defoultData, setDefoultData] = useState("");
   const [username, setUsername] = useState("");
-  const [data, setData] = useState('');
-  const profileDefoult = axios
-    .get("https://api.github.com/users/octocat")
-    .then((resp) => setDefoultData(resp.data));
+  const [userData, setUserData] = useState({});
+  const [modeTheme, setModeTheme] = useState("light");
+  useEffect(() => {
+    baseUrl.get("octocat").then((resp) => setUserData(resp.data));
+  }, []);
 
-useEffect()=>{
-
-,}
+  let {
+    avatar_url,
+    login,
+    name,
+    created_at,
+    bio,
+    public_repos,
+    followers,
+    following,
+    location,
+    blog,
+    twitter_username,
+    company,
+  } = userData;
+  console.log(bio);
   const onChangeHandler = (e) => {
     setUsername(e.target.value);
   };
@@ -25,94 +43,57 @@ useEffect()=>{
   const submitHandler = async (e) => {
     e.preventDefault();
     if (username) {
-      const profile = await axios.get(
-        `https://api.github.com/users/${username}`
-      );
+      const profile = await baseUrl.get(`${username}` || "octocat");
       const profileJson = await profile.data;
       if (profileJson) {
-        setData(profileJson);
+        setUserData(profileJson);
         console.log(profileJson);
       }
       setUsername("");
     }
   };
 
-  let Image = defoultData.avatar_url;
-  if (data.avatar_url) {
-    Image = data.avatar_url;
-  }
-  let Login = defoultData.login;
-  if (data.login) {
-    Login = data.login;
-  }
-  let Name = defoultData.name;
-  if (data.name) {
-    Name = data.name;
-  } else if (data.name === null) {
-    Name = "Not Available";
-  }
-  let joined = defoultData.created_at;
-  if (data.created_at) {
-    joined = data.created_at;
-  }
-  let Bio = defoultData.bio || "Not Available";
-  if (data.bio) {
-    Bio = data.bio;
-  } else if (data.bio === null) {
-    Bio = "Not Available";
+  if (name === null) {
+    name = "Not Available";
   }
 
-  let Repository = defoultData.public_repos;
+  if (bio === null) {
+    bio = " Not Available";
+  }
 
-  if (data.public_repos) {
-    Repository = data.public_repos;
-  } else if (data.public_repos === 0) {
-    Repository = 0;
+  if (location === null) {
+    location = "Not Available";
   }
-  let Followers = defoultData.followers;
-  if (data.followers) {
-    Followers = data.followers;
-  } else if (data.followers === 0) {
-    Followers = 0;
+
+  if (blog === "") {
+    blog = "Not Available";
   }
-  let Following = defoultData.following;
-  if (data.following) {
-    Following = data.following;
-  } else if (data.following === 0) {
-    Following = 0;
+  if (twitter_username === null) {
+    twitter_username = "Not Available";
   }
-  let Location = "San Francisco";
-  if (data.location) {
-    Location = data.location;
-  } else if (data.location === null) {
-    Location = "Not Available";
+
+  if (company === null) {
+    company = "Not Available";
   }
-  let Blog = defoultData.blog;
-  if (data.blog) {
-    Blog = data.blog;
-  }
-  let Twitter = defoultData.twitter_username || "Not Available";
-  if (data.twitter_username) {
-    Twitter = data.twitter_username;
-  } else if (data.twitter_username === null) {
-    Twitter = "Not Available";
-  }
-  let Company = defoultData.company;
-  if (data.company) {
-    Company = data.company;
-  }
+  const modeChangeHandler = () => {
+    modeTheme === "light" ? setModeTheme("dark") : setModeTheme("light");
+  };
   return (
-    <ContainerStyled>
-      <HeaderStyled>
+    <Container modeTheme={modeTheme}>
+      <Header modeTheme={modeTheme}>
         <h1>devfinder</h1>
-        <button>
-          <span>DARK</span>
-          <img src={darkmode} alt="dark mode" />
+        <button onClick={modeChangeHandler}>
+          <span>{modeTheme === "light" ? "dark " : "light"}</span>
+          <img
+            src={modeTheme === "light" ? moon : sun}
+            alt={modeTheme === "light" ? "dark " : "light"}
+          />
         </button>
-      </HeaderStyled>
-      <InputStyled>
+      </Header>
+      <Input modeTheme={modeTheme}>
         <img src={searchIcon} alt="search icon" />
         <input
+          modeTheme={modeTheme}
           value={username}
           onChange={onChangeHandler}
           placeholder="Search GitHub username..."
@@ -120,93 +101,114 @@ useEffect()=>{
         <button type="submit" onClick={submitHandler}>
           Search
         </button>
-      </InputStyled>
-      <UserCardStyled>
-        <UserHolder>
-          <img src={Image} alt="octocat" />
-          <div>
-            <h3>{Name}</h3>
-            <p>{Login}</p>
-            <span>{joined}</span>
+      </Input>
+      <UserCard modeTheme={modeTheme}>
+        <UserHolder modeTheme={modeTheme}>
+          <img src={avatar_url} alt="octocat" />
+          <div modeTheme={modeTheme}>
+            <h3>{name}</h3>
+            <p>{login}</p>
+            <span>{created_at}</span>
           </div>
         </UserHolder>
-        <p>Bio:{Bio}</p>
-        <UserBox>
+        <Bio modeTheme={modeTheme}>
+          <p>Bio:{bio}</p>
+        </Bio>
+
+        <UserBox modeTheme={modeTheme}>
           <div>
-            Repos
-            <h3>{Repository}</h3>
+            <span> Repos</span>
+            <h3>{public_repos}</h3>
           </div>
           <div>
-            Followers
-            <h3>{Followers}</h3>
+            <span> Followers</span>
+            <h3>{followers}</h3>
           </div>
           <div>
-            Following
-            <h3>{Following}</h3>
+            <span> Following</span>
+            <h3>{following}</h3>
           </div>
         </UserBox>
 
-        <UserInfo>
+        <UserInfo modeTheme={modeTheme}>
           <div>
             <img src={homeTown} alt="home town" />
-            <p> {Location}</p>
+            <p> {location}</p>
           </div>
           <div>
             <img src={link} alt="link" />
-            <p>{Blog}</p>
+            <p>{blog}</p>
           </div>
           <div>
             <img src={twitter} alt="home town" />
-            <p> {Twitter}</p>
+            <p> {twitter_username}</p>
           </div>
           <div>
             <img src={officeBuilding} alt="company" />
-            <p>{Company}</p>
+            <p>{company}</p>
           </div>
         </UserInfo>
-      </UserCardStyled>
-    </ContainerStyled>
+      </UserCard>
+    </Container>
   );
 };
-const ContainerStyled = styled.div`
+
+const Container = styled.div`
   min-width: 375px;
   padding: 31px 24px 79px 24px;
-  background-color: ${({ theme }) => theme.whiteSmoke};
+  background-color: ${({ theme, modeTheme }) =>
+    modeTheme === "light"
+      ? theme.colors.light.ivory
+      : theme.colors.dark.darkBlue};
+  transition: 0.5s all ease-out;
 `;
 
-const HeaderStyled = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   h1 {
-    color: ${({ theme }) => theme.midnightExpress};
+    font-family: monospace;
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.midnightExpress
+        : theme.colors.dark.white1};
+    transition: 0.5s all ease-out;
     font-size: 26px;
     font-weight: 700;
-    font-family: "Space Mono", monospace;
   }
   button {
     align-items: center;
     display: flex;
     border: none;
-    background-color: transparent;
+    background: none;
     gap: 16px;
-    font-family: "Space Mono", monospace;
+    font-family: monospace;
     span {
-      color: ${({ theme }) => theme.steel};
+      color: ${({ theme, modeTheme }) =>
+        modeTheme === "light"
+          ? theme.colors.light.steel
+          : theme.colors.dark.white1};
+      transition: 0.5s all ease-out;
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 2.5px;
+      text-transform: uppercase;
     }
   }
 `;
 
-const InputStyled = styled.div`
+const Input = styled.div`
   display: flex;
   width: 100%;
   height: 60px;
   border-radius: 15px;
   margin: 35px 0 16px 0;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme, modeTheme }) =>
+    modeTheme === "light"
+      ? theme.colors.light.white
+      : theme.colors.dark.purple};
+  transition: 0.5s all ease-out;
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
 
   img {
@@ -222,17 +224,27 @@ const InputStyled = styled.div`
     border: none;
     outline: none;
     font-family: "Space Mono";
+    background-color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.white
+        : theme.colors.dark.purple};
+    transition: 0.5s all ease-out;
+    caret-color: ${({ theme }) => theme.colors.light.dadgerBlue};
   }
   input::placeholder {
-    color: ${({ theme }) => theme.steel};
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.steel
+        : theme.colors.dark.white1};
+    transition: 0.5s all ease-out;
     font-size: 13px;
     font-weight: 400;
     line-height: 25px;
-    font-family: "Space Mono";
+    font-family: monospace;
   }
   button {
-    background-color: ${({ theme }) => theme.dodgerBlue};
-    color: ${({ theme }) => theme.white1};
+    background-color: ${({ theme }) => theme.colors.light.dadgerBlue};
+    color: ${({ theme }) => theme.colors.light.white1};
     font-size: 14px;
     font-weight: 700;
     line-height: 20.73px;
@@ -247,18 +259,27 @@ const InputStyled = styled.div`
   }
 `;
 
-const UserCardStyled = styled.div`
+const UserCard = styled.div`
   padding: 33px 24px 49px 24px;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme, modeTheme }) =>
+    modeTheme === "light"
+      ? theme.colors.light.white
+      : theme.colors.dark.purple};
   border-radius: 15px;
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
-  font-family: "Space Mono";
+  font-family: monospace;
+`;
+const Bio = styled.div`
   p {
     font-size: 13px;
     font-weight: 400;
-    color: ${({ theme }) => theme.steel};
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.steel
+        : theme.colors.dark.white1};
     margin-bottom: 23px;
-    font-family: "Space Mono";
+    font-family: monospace;
+    line-height: 25px;
   }
 `;
 const UserHolder = styled.div`
@@ -272,41 +293,56 @@ const UserHolder = styled.div`
   h3 {
     font-size: 16px;
     font-weight: 700;
-    color: ${({ theme }) => theme.licorice};
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.licorice
+        : theme.colors.dark.white1};
     font-family: "Space Mono";
   }
   p {
     font-size: 13px;
     font-weight: 400;
-    color: ${({ theme }) => theme.dodgerBlue};
+    color: ${({ theme }) => theme.colors.light.dadgerBlue};
     margin-bottom: 6px;
     font-family: "Space Mono";
   }
   span {
     font-size: 13px;
     font-weight: 400;
-    color: ${({ theme }) => theme.stone};
-    font-family: "Space Mono";
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.stone
+        : theme.colors.dark.white1};
+    font-family: monospace;
   }
 `;
 const UserBox = styled.div`
   display: flex;
   justify-content: space-around;
-  background-color: ${({ theme }) => theme.white2};
+  background-color: ${({ theme, modeTheme }) =>
+    modeTheme === "light"
+      ? theme.colors.light.ivory
+      : theme.colors.dark.darkBlue};
   border-radius: 10px;
   padding: 18px 14px 19px 15px;
   div {
     font-size: 11px;
     font-weight: 400;
-    color: ${({ theme }) => theme.steel};
-    font-family: "Space Mono";
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.steel
+        : theme.colors.dark.white1};
+    font-family: monospace;
   }
   h3 {
     font-size: 16px;
     font-weight: 700;
     margin-top: 8px;
     text-align: center;
-    color: ${({ theme }) => theme.licorice};
+    color: ${({ theme, modeTheme }) =>
+      modeTheme === "light"
+        ? theme.colors.light.licorice
+        : theme.colors.dark.white1};
     font-family: "Space Mono";
   }
 `;
@@ -316,11 +352,28 @@ const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 17px;
+  font-family: monospace;
   div {
     display: flex;
+    align-items: center;
     gap: 15px;
+    img {
+      color: ${({ theme, modeTheme }) =>
+        modeTheme === "light" ? theme.colors.light.steel : "red"};
+    }
+
     p {
-      font-family: "Space Mono";
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 19.23%;
+      color: ${({ theme, modeTheme }) =>
+        modeTheme === "light"
+          ? theme.colors.light.steel
+          : theme.colors.dark.white1};
+    }
+    &:hover p {
+      text-decoration: underline;
     }
   }
 `;
