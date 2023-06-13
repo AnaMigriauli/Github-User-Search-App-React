@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/Github-User-Search-App-React/static/css/main.31d6cfe0.css",
+    "main.js": "/Github-User-Search-App-React/static/js/main.625ff9cd.js",
+    "static/media/001-office-building.svg": "/Github-User-Search-App-React/static/media/001-office-building.ef7eade404f2db13d1ce157edfc9c1da.svg",
+    "static/media/002-sun.svg": "/Github-User-Search-App-React/static/media/002-sun.7ad90921100f1e660ff9b5c3422e05ec.svg",
+    "static/media/002-url.svg": "/Github-User-Search-App-React/static/media/002-url.4b43ccea1a315b0c26f0b25936b32243.svg",
+    "static/media/Path1.svg": "/Github-User-Search-App-React/static/media/Path1.5de340dcd6fcbfc9b00c6c7e749d7da5.svg",
+    "static/media/Combined Shape.svg": "/Github-User-Search-App-React/static/media/Combined Shape.222f4126eb0b91e4e5a89273f9fe2b4d.svg",
+    "static/media/Path.svg": "/Github-User-Search-App-React/static/media/Path.8823c7d948dc2a8dff66f4d9db677a78.svg",
+    "static/media/Shape.svg": "/Github-User-Search-App-React/static/media/Shape.30d655d9f355826dc67779f302468b61.svg",
+    "index.html": "/Github-User-Search-App-React/index.html",
+    "main.625ff9cd.js.map": "/Github-User-Search-App-React/static/js/main.625ff9cd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.31d6cfe0.css",
+    "static/js/main.625ff9cd.js"
+  ]
+}
