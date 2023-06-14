@@ -17,7 +17,9 @@ const baseUrl = axios.create({
 const MainContainer = (props) => {
   const [username, setUsername] = useState("");
   const [userData, setUserData] = useState({});
-  const [modeTheme, setModeTheme] = useState("light");
+  const [modeTheme, setModeTheme] = useState(
+    localStorage.getItem("mode") || "light"
+  );
   const [errorMessage, setErrorMessage] = useState(null);
   useEffect(() => {
     baseUrl.get("octocat").then((resp) => setUserData(resp.data));
@@ -70,6 +72,11 @@ const MainContainer = (props) => {
   const modeChangeHandler = () => {
     modeTheme === "light" ? setModeTheme("dark") : setModeTheme("light");
   };
+
+  useEffect(() => {
+    localStorage.setItem("mode", modeTheme);
+  }, [modeTheme]);
+
   return (
     <Container modetheme={modeTheme}>
       <Header modetheme={modeTheme}>
