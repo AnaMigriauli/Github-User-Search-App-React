@@ -100,10 +100,8 @@ const MainContainer = (props) => {
         <UserHolder modetheme={modeTheme}>
           <img src={avatar_url} alt="octocat" />
           <div>
-            <div>
-              <h3>{name}</h3>
-              <p>{login}</p>
-            </div>
+            <h3>{name}</h3>
+            <p>{login}</p>
             <span>Joined {moment(created_at).format("ll")}</span>
           </div>
         </UserHolder>
@@ -112,23 +110,17 @@ const MainContainer = (props) => {
         </Bio>
 
         <UserBox modetheme={modeTheme}>
-          <div>
-            <span> Repos</span>
-            <h3>{public_repos}</h3>
-          </div>
-          <div>
-            <span> Followers</span>
-            <h3>{followers}</h3>
-          </div>
-          <div>
-            <span> Following</span>
-            <h3>{following}</h3>
-          </div>
+          <span> Repos</span>
+          <span> Followers</span>
+          <span> Following</span>
+          <h3>{public_repos}</h3>
+          <h3>{followers}</h3>
+          <h3>{following}</h3>
         </UserBox>
 
         <UserInfo modetheme={modeTheme}>
           <div>
-            <div homeTown={homeTown}></div>
+            <img src={homeTown} alt="homeTown" />
             <p> {UserInfoAvailableHandler(location)}</p>
           </div>
           <div>
@@ -136,7 +128,7 @@ const MainContainer = (props) => {
             <p>{UserInfoAvailableHandler(blog)}</p>
           </div>
           <div>
-            <img src={twitter} alt="home town" />
+            <img src={twitter} alt="twitter" />
             <p> {UserInfoAvailableHandler(twitter_username)}</p>
           </div>
           <div>
@@ -301,9 +293,9 @@ const Input = styled.form`
     border-radius: 10px;
     border: none;
     cursor: pointer;
-  }
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.brightBlu};
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.brightBlu};
+    }
   }
   @media (min-width: 768px) {
     width: 573px;
@@ -360,12 +352,12 @@ const UserCard = styled.div`
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
   @media (min-width: 768px) {
     width: 573px;
-    height: 481px;
+
     padding: 40px;
   }
   @media (min-width: 1140px) {
     width: 730px;
-    height: 419px;
+
     padding: 48px;
   }
 `;
@@ -383,6 +375,9 @@ const Bio = styled.div`
   }
   @media (min-width: 768px) {
     font-size: 15px;
+  }
+  @media (min-width: 1140px) {
+    margin-left: 154px;
   }
 `;
 const UserHolder = styled.div`
@@ -437,27 +432,12 @@ const UserHolder = styled.div`
   }
   @media (min-width: 1140px) {
     gap: 37px;
-    margin-bottom: 20px;
-    div {
-      display: flex;
-      div {
-        h3 {
-          font-size: 26px;
-        }
-        p {
-          font-size: 16px;
-        }
-      }
-      span {
-        font-size: 15px;
-      }
-    }
   }
 `;
 
 const UserBox = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1.5fr;
   row-gap: 8px;
   text-align: center;
   background-color: ${({ theme, modetheme }) =>
@@ -467,7 +447,7 @@ const UserBox = styled.div`
   transition: 0.5s all ease-in-out;
   border-radius: 10px;
   padding: 18px 14px 19px 15px;
-  div {
+  span {
     font-size: 11px;
     font-weight: 400;
     color: ${({ theme, modetheme }) =>
@@ -479,8 +459,6 @@ const UserBox = styled.div`
   h3 {
     font-size: 16px;
     font-weight: 700;
-    /* margin-top: 8px; */
-    text-align: center;
     color: ${({ theme, modetheme }) =>
       modetheme === "light"
         ? theme.colors.light.licorice
@@ -489,12 +467,17 @@ const UserBox = styled.div`
   }
   @media (min-width: 768px) {
     padding: 15px 96px 17px 32px;
-    div {
+    text-align: left;
+    span {
       font-size: 13px;
     }
     h3 {
       font-size: 22px;
     }
+  }
+  @media (min-width: 1140px) {
+    margin-left: 154px;
+    padding: 15px 83px 17px 32px;
   }
 `;
 
@@ -514,13 +497,13 @@ const UserInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 15px;
-    div {
+    /* div {
       width: 20px;
       height: 20px;
       background-color: red;
       -webkit-mask: url(homeTown) no-repeat center;
       mask: url(homeTown) no-repeat center;
-    }
+    } */
     p {
       font-size: 13px;
       font-weight: 400;
@@ -536,6 +519,9 @@ const UserInfo = styled.div`
     grid-template-columns: 1fr 1fr;
     font-size: 15px;
     margin-top: 30px;
+  }
+  @media (min-width: 1140px) {
+    margin-left: 154px;
   }
 `;
 export default MainContainer;
