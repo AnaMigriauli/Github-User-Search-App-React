@@ -9,6 +9,7 @@ export const DefaultColors = {
       midnightExpress: "#222731",
       darkBlue: "#141D2F",
       purple: "#1E2A47",
+      lightSteel: "#90A4D4",
     },
     light: {
       whiteSmoke: "#f2f2f2",
@@ -24,5 +25,6 @@ export const DefaultColors = {
     },
 
     brightRed: "#F74646",
+    brightBlu: "#60ABFF",
   },
 };
