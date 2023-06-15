@@ -9,6 +9,8 @@ import homeTown from "../assets/Images/Shape.svg";
 import link from "../assets/Images/002-url.svg";
 import twitter from "../assets/Images/Path1.svg";
 import officeBuilding from "../assets/Images/001-office-building.svg";
+import { breakpoints } from "../assets/themes/themes";
+import { DefaultColors } from "../assets/themes/themes";
 
 const baseUrl = axios.create({
   baseURL: "https://api.github.com/users/",
@@ -41,8 +43,17 @@ const MainContainer = (props) => {
     company,
   } = userData;
 
+  const UserInfoArr = [
+    [homeTown, location],
+    [link, blog],
+    [twitter, twitter_username],
+    [officeBuilding, company],
+  ];
+
+  console.log(typeof UserInfoArr[1][0]);
   const onChangeHandler = (e) => {
     setUsername(e.target.value);
+    setErrorMessage(null);
   };
 
   const submitHandler = async (e) => {
@@ -54,18 +65,11 @@ const MainContainer = (props) => {
         if (profileJson) {
           setUserData(profileJson);
         }
-        setErrorMessage();
         setUsername("");
+        setErrorMessage(null);
       }
     } catch {
       setErrorMessage("No result");
-    }
-  };
-  const UserInfoAvailableHandler = (avaliable) => {
-    if (avaliable) {
-      return avaliable;
-    } else {
-      return "Not Available";
     }
   };
 
@@ -78,93 +82,101 @@ const MainContainer = (props) => {
   }, [modeTheme]);
 
   return (
-    <Container modetheme={modeTheme}>
-      <Header modetheme={modeTheme}>
-        <h1>devfinder</h1>
-        <button onClick={modeChangeHandler}>
-          <span>{modeTheme === "light" ? "dark " : "light"}</span>
-          <img
-            src={modeTheme === "light" ? moon : sun}
-            alt={modeTheme === "light" ? "dark " : "light"}
-          />
-        </button>
-      </Header>
-      <Input modetheme={modeTheme} errormessage={errorMessage}>
-        <img src={searchIcon} alt="search icon" />
-        <div>
-          <input
-            value={username}
-            onChange={onChangeHandler}
-            placeholder="Search GitHub username..."
-          />
-          <span>{errorMessage}</span>
-        </div>
-        <button type="submit" onClick={submitHandler}>
-          Search
-        </button>
-      </Input>
-      <UserCard modetheme={modeTheme}>
-        <UserHolder modetheme={modeTheme}>
-          <img src={avatar_url} alt="octocat" />
+    <BackgroundContainer modetheme={modeTheme}>
+      <Container>
+        <Header modetheme={modeTheme}>
+          <h1>devfinder</h1>
+          <button onClick={modeChangeHandler}>
+            <span>{modeTheme === "light" ? "dark " : "light"}</span>
+            <img
+              src={modeTheme === "light" ? moon : sun}
+              alt={modeTheme === "light" ? "dark " : "light"}
+            />
+          </button>
+        </Header>
+        <Input modetheme={modeTheme} errormessage={errorMessage}>
+          <img src={searchIcon} alt="search icon" />
           <div>
-            <h3>{name}</h3>
-            <p>{login}</p>
-            <span>Joined {moment(created_at).format("ll")}</span>
+            <input
+              value={username}
+              onChange={onChangeHandler}
+              placeholder="Search GitHub username..."
+            />
+            <span>{errorMessage}</span>
           </div>
-        </UserHolder>
-        <Bio modetheme={modeTheme}>
-          <p>{bio || "This profile has no bio"}</p>
-        </Bio>
+          <button type="submit" onClick={submitHandler}>
+            Search
+          </button>
+        </Input>
+        <UserCard modetheme={modeTheme}>
+          <UserHolder modetheme={modeTheme}>
+            <img src={avatar_url} alt="octocat" />
+            <div>
+              <h3>{name}</h3>
+              <p>@{login}</p>
+              <span>Joined {moment(created_at).format("ll")}</span>
+            </div>
+          </UserHolder>
+          <Bio modetheme={modeTheme}>
+            <p>{bio || "This profile has no bio"}</p>
+          </Bio>
 
-        <UserBox modetheme={modeTheme}>
-          <span> Repos</span>
-          <span> Followers</span>
-          <span> Following</span>
-          <h3>{public_repos}</h3>
-          <h3>{followers}</h3>
-          <h3>{following}</h3>
-        </UserBox>
+          <UserBox modetheme={modeTheme}>
+            <span> Repos</span>
+            <span> Followers</span>
+            <span> Following</span>
+            <h3>{public_repos}</h3>
+            <h3>{followers}</h3>
+            <h3>{following}</h3>
+          </UserBox>
 
-        <UserInfo modetheme={modeTheme}>
-          <div>
-            <img src={homeTown} alt="homeTown" />
-            <p> {UserInfoAvailableHandler(location)}</p>
-          </div>
-          <div>
-            <img src={link} alt="link" />
-            <p>{UserInfoAvailableHandler(blog)}</p>
-          </div>
-          <div>
-            <img src={twitter} alt="twitter" />
-            <p> {UserInfoAvailableHandler(twitter_username)}</p>
-          </div>
-          <div>
-            <img src={UserInfoAvailableHandler(officeBuilding)} alt="company" />
-            <p>{company}</p>
-          </div>
-        </UserInfo>
-      </UserCard>
-    </Container>
+          <UserInfo modetheme={modeTheme}>
+            {UserInfoArr.map((a, index) => (
+              <div key={index}>
+                <div
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    backgroundColor: `${
+                      modeTheme === "light"
+                        ? DefaultColors.colors.dark.steel
+                        : DefaultColors.colors.light.white1
+                    }`,
+                    WebkitMask: `url(${a[0]}) no-repeat center`,
+                    mask: `url(${a[0]}) no-repeat center`,
+                  }}
+                ></div>
+                <p> {a[1] || "Not Available"}</p>
+              </div>
+            ))}
+          </UserInfo>
+        </UserCard>
+      </Container>
+    </BackgroundContainer>
   );
 };
 
-const Container = styled.div`
-  min-width: 375px;
+const BackgroundContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 31px 24px 79px 24px;
   background-color: ${({ theme, modetheme }) =>
     modetheme === "light"
       ? theme.colors.light.ivory
       : theme.colors.dark.darkBlue};
   transition: 0.5s all ease-in-out;
+`;
+const Container = styled.div`
   font-family: "Space Mono", monospace;
-  @media (min-width: 768px) {
-    min-width: 573px;
-    padding: 140px 98px 236px 97px;
+  padding: 31px 24px 79px 24px;
+  width: 375px;
+  @media (min-width: ${breakpoints.medium}) {
+    width: 573px;
+    /* padding: 140px 98px 236px 97px; */
   }
-  @media (min-width: 1140px) {
-    min-width: 730px;
-    width: 100%;
+  @media (min-width: ${breakpoints.large}) {
+    width: 730px;
   }
 `;
 
@@ -207,13 +219,13 @@ const Header = styled.div`
       }
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     gap: 369px;
     h1 {
       font-size: 26px;
     }
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     gap: 526px;
   }
 `;
@@ -271,8 +283,6 @@ const Input = styled.form`
             ? theme.colors.light.steel
             : theme.colors.dark.white1};
         transition: 0.5s all ease-in-out;
-        font-weight: 400;
-        line-height: 25px;
       }
       &:focus {
         font-size: 13px;
@@ -304,7 +314,7 @@ const Input = styled.form`
       background-color: ${({ theme }) => theme.colors.brightBlu};
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     width: 573px;
     height: 69px;
     border-radius: 15px;
@@ -335,7 +345,7 @@ const Input = styled.form`
       margin: 9.5px 10px 9.5px 23px;
     }
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     width: 730px;
     div {
       width: 504px;
@@ -357,12 +367,12 @@ const UserCard = styled.div`
   transition: 0.5s all ease-in-out;
   border-radius: 15px;
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     width: 573px;
 
     padding: 40px;
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     width: 730px;
 
     padding: 48px;
@@ -380,10 +390,10 @@ const Bio = styled.div`
     margin-bottom: 23px;
     line-height: 25px;
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     font-size: 15px;
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     margin-left: 154px;
   }
 `;
@@ -420,7 +430,7 @@ const UserHolder = styled.div`
         : theme.colors.dark.white1};
     transition: 0.5s all ease-in-out;
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     gap: 41px;
     margin-bottom: 38px;
     img {
@@ -437,8 +447,9 @@ const UserHolder = styled.div`
       font-size: 15px;
     }
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     gap: 37px;
+    margin: 0;
   }
 `;
 
@@ -472,7 +483,7 @@ const UserBox = styled.div`
         : theme.colors.dark.white1};
     transition: 0.5s all ease-in-out;
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     padding: 15px 96px 17px 32px;
     text-align: left;
     span {
@@ -482,9 +493,10 @@ const UserBox = styled.div`
       font-size: 22px;
     }
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.large}) {
     margin-left: 154px;
     padding: 15px 83px 17px 32px;
+    margin-top: 37px;
   }
 `;
 
@@ -504,13 +516,6 @@ const UserInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 15px;
-    /* div {
-      width: 20px;
-      height: 20px;
-      background-color: red;
-      -webkit-mask: url(homeTown) no-repeat center;
-      mask: url(homeTown) no-repeat center;
-    } */
     p {
       font-size: 13px;
       font-weight: 400;
@@ -521,14 +526,15 @@ const UserInfo = styled.div`
       transition: 0.5s all ease-in-out;
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: ${breakpoints.medium}) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     font-size: 15px;
     margin-top: 30px;
   }
-  @media (min-width: 1140px) {
+  @media (min-width: ${breakpoints.medium}) {
     margin-left: 154px;
+    margin-top: 37px;
   }
 `;
 export default MainContainer;

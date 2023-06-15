@@ -28,3 +28,8 @@ export const DefaultColors = {
     brightBlu: "#60ABFF",
   },
 };
+
+export const breakpoints = {
+  medium: "580px",
+  large: "750px",
+};
